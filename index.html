@@ -1,236 +1,311 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Controle Familiar Parcelado</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Controle Financeiro Pessoal</title>
+  <meta name="description" content="Sistema de controle financeiro pessoal responsivo em HTML, CSS e JavaScript puro.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app" id="app">
-  <header class="card header">
-    <div>
-      <div class="eyebrow">Finanças familiares</div>
-      <h1>Controle Financeiro</h1>
-    </div>
-    <button class="icon-btn" id="themeToggle" aria-label="Alternar tema">☼</button>
-  </header>
-
-  <section class="card summary">
-    <div class="summary-top">
+  <div class="app-shell">
+    <header class="topbar card glass" aria-label="Barra superior">
       <div>
-        <div class="eyebrow">Resumo do período</div>
-        <div class="balance" id="balanceValue">R$ 0,00</div>
-        <div class="balance-note" id="monthLabel">Mês</div>
+        <p class="eyebrow">Baseado na lógica da planilha</p>
+        <h1>Controle Financeiro</h1>
       </div>
-      <div class="status" id="balanceStatus">Neutro</div>
-    </div>
-    <div class="month-row">
-      <div>
-        <div class="month-title">Período selecionado</div>
-        <div class="month-strong" id="monthStrong">--/----</div>
+      <div class="topbar-actions">
+        <button id="themeToggle" class="icon-btn" type="button" aria-label="Alternar tema">
+          <span class="icon sun" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3V1m0 22v-2m9-9h2M1 12h2m15.364 6.364 1.414 1.414M3.222 4.636l1.414 1.414m0 12.314-1.414 1.414m15.142-15.142 1.414-1.414M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/></svg>
+          </span>
+          <span class="icon moon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+          </span>
+        </button>
       </div>
-      <div class="nav-controls">
-        <button class="month-btn" id="prevMonth" aria-label="Mês anterior">‹</button>
-        <button class="month-btn" id="nextMonth" aria-label="Próximo mês">›</button>
-      </div>
-    </div>
-  </section>
+    </header>
 
-  <section class="cards-grid" aria-label="Indicadores principais">
-    <div class="card mini-card success"><div class="label">Total do mês</div><div class="value" id="monthTotal">R$ 0,00</div></div>
-    <div class="card mini-card secondary"><div class="label">Parcelas no mês</div><div class="value" id="monthInstallments">0</div></div>
-    <div class="card mini-card danger"><div class="label">Maior gasto</div><div class="value" id="largestExpense">R$ 0,00</div></div>
-    <div class="card mini-card accent"><div class="label">Pessoas com lançamentos</div><div class="value" id="peopleCount">0</div></div>
-  </section>
+    <main class="layout" aria-label="Aplicação financeira">
+      <nav class="mobile-tabs card" aria-label="Navegação principal">
+        <button class="tab-link active" data-section="dashboardSection" type="button">Resumo</button>
+        <button class="tab-link" data-section="recordsSection" type="button">Lançamentos</button>
+        <button class="tab-link" data-section="analyticsSection" type="button">Análises</button>
+        <button class="tab-link" data-section="settingsSection" type="button">Backup</button>
+      </nav>
 
-  <nav class="card tabs" aria-label="Navegação principal">
-    <button class="tab active" data-tab="dashboard">Dashboard</button>
-    <button class="tab" data-tab="compras">Compras</button>
-    <button class="tab" data-tab="lancamentos">Lançamentos</button>
-    <button class="tab" data-tab="backup">Backup</button>
-  </nav>
-
-  <main>
-    <section class="card section active" data-section="dashboard">
-      <div class="section-head">
-        <div>
-          <div class="eyebrow">Visão geral</div>
-          <h2>Resumo por pessoa e conta</h2>
-        </div>
-      </div>
-      <div class="kpi-grid">
-        <div class="card mini-card">
-          <div class="label">Pessoa com maior gasto</div>
-          <div class="value" id="topPerson">-</div>
-        </div>
-        <div class="card mini-card">
-          <div class="label">Conta/cartão com maior gasto</div>
-          <div class="value" id="topAccount">-</div>
-        </div>
-      </div>
-      <div class="card" style="margin-top:14px;padding:16px;">
-        <div class="eyebrow">Distribuição</div>
-        <h3 style="margin:4px 0 14px;">Gastos por pessoa</h3>
-        <div class="chart-list" id="personChart"></div>
-      </div>
-      <div class="card" style="margin-top:14px;padding:16px;">
-        <div class="eyebrow">Comparativo</div>
-        <h3 style="margin:4px 0 14px;">Últimos 6 meses</h3>
-        <div class="chart-list" id="historyChart"></div>
-      </div>
-    </section>
-
-    <section class="card section" data-section="compras">
-      <div class="section-head">
-        <div>
-          <div class="eyebrow">Novo lançamento</div>
-          <h2>Compra com parcelamento automático</h2>
-        </div>
-      </div>
-
-      <form id="purchaseForm" novalidate>
-        <div class="grid two">
-          <div class="field">
-            <label for="person">Pessoa</label>
-            <select id="person" name="person" required></select>
+      <section id="dashboardSection" class="page-section active" aria-labelledby="dashboardTitle">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Visão geral</p>
+            <h2 id="dashboardTitle">Dashboard do mês</h2>
           </div>
-          <div class="field">
-            <label for="account">Conta/cartão</label>
-            <select id="account" name="account" required></select>
-          </div>
-          <div class="field">
-            <label for="description">Descrição</label>
-            <input id="description" name="description" placeholder="Ex.: Mercado do mês" required />
-          </div>
-          <div class="field">
-            <label for="purchaseAmount">Valor total da compra</label>
-            <input id="purchaseAmount" name="purchaseAmount" inputmode="decimal" placeholder="0,00" required />
-          </div>
-          <div class="field">
-            <label for="purchaseDate">Data da compra</label>
-            <input id="purchaseDate" name="purchaseDate" type="date" required />
-          </div>
-          <div class="field">
-            <label for="installments">Parcelamento</label>
-            <select id="installments" name="installments">
-              <option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option><option value="7">7x</option><option value="8">8x</option><option value="9">9x</option><option value="10">10x</option><option value="11">11x</option><option value="12">12x</option><option value="13">13x</option><option value="14">14x</option><option value="15">15x</option><option value="16">16x</option><option value="17">17x</option><option value="18">18x</option><option value="19">19x</option><option value="20">20x</option><option value="21">21x</option><option value="22">22x</option><option value="23">23x</option><option value="24">24x</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="startRule">Primeira cobrança</label>
-            <select id="startRule" name="startRule">
-              <option value="next" selected>Começar no próximo mês</option>
-              <option value="same">Lançar no mesmo mês da compra</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="purchaseMode">Tipo de lançamento</label>
-            <select id="purchaseMode" name="purchaseMode">
-              <option value="installment" selected>Parcelado / compra normal</option>
-              <option value="recurring">Recorrente mensal</option>
-            </select>
-          </div>
-          <div class="field" id="recurringMonthsWrap" hidden>
-            <label for="recurringMonths">Repetir por quantos meses</label>
-            <select id="recurringMonths" name="recurringMonths">
-              <option value="3">3 meses</option>
-              <option value="6">6 meses</option>
-              <option value="12" selected>12 meses</option>
-              <option value="24">24 meses</option>
-              <option value="36">36 meses</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="notes">Observação</label>
-            <input id="notes" name="notes" placeholder="Opcional" />
+          <div class="period-picker card-inline">
+            <label>
+              <span>Mês</span>
+              <select id="monthSelect" aria-label="Selecionar mês"></select>
+            </label>
+            <label>
+              <span>Ano</span>
+              <select id="yearSelect" aria-label="Selecionar ano"></select>
+            </label>
           </div>
         </div>
-        <p class="helper" style="margin:10px 0 14px;">
-          Parcelado: se a compra for em 04/2026, 10x, no valor de R$ 1.000,00, o sistema lança R$ 100,00 em 05/2026, 06/2026 e assim por diante.
-          <br>Recorrente: se você lançar aluguel de R$ 700,00 em 04/2026 por 12 meses, ele repete o mesmo valor mês a mês.
-        </p>
-        <div class="btn-row">
-          <button class="btn ghost" type="reset">Limpar</button>
-          <button class="btn primary" type="submit">Salvar compra</button>
-        </div>
-      </form>
-      
-      
-    </section>
 
-    <section class="card section" data-section="lancamentos">
-      <div class="section-head">
-        <div>
-          <div class="eyebrow">Tabela mensal</div>
-          <h2>Lançamentos do mês</h2>
+        <div class="hero-balance card">
+          <div>
+            <p class="eyebrow">Saldo do mês</p>
+            <h3 id="balanceValue">R$ 0,00</h3>
+            <p id="balanceStatus" class="status-chip neutral">Sem movimentações</p>
+          </div>
+          <div class="hero-meta">
+            <div>
+              <span>Ganhos</span>
+              <strong id="incomeTotal">R$ 0,00</strong>
+            </div>
+            <div>
+              <span>Custos</span>
+              <strong id="expenseTotal">R$ 0,00</strong>
+            </div>
+          </div>
         </div>
-        <div class="btn-row">
-          <button class="btn ghost" id="exportCsvBtn" type="button">Exportar CSV</button>
-          <button class="btn ghost" id="exportJsonBtn" type="button">Exportar JSON</button>
+
+        <div class="cards-grid stats-grid">
+          <article class="summary-card card"><span>Ganhos fixos</span><strong id="fixedIncomeTotal">R$ 0,00</strong></article>
+          <article class="summary-card card"><span>Ganhos variáveis</span><strong id="variableIncomeTotal">R$ 0,00</strong></article>
+          <article class="summary-card card"><span>Custos fixos</span><strong id="fixedCostTotal">R$ 0,00</strong></article>
+          <article class="summary-card card"><span>Custos variáveis</span><strong id="variableCostTotal">R$ 0,00</strong></article>
         </div>
-      </div>
 
-      <div class="toolbar">
-        <div class="field"><input id="searchInput" placeholder="Pesquisar descrição..." /></div>
-        <div class="field"><select id="personFilter"><option value="">Todas as pessoas</option></select></div>
-        <div class="field"><select id="accountFilter"><option value="">Todas as contas</option></select></div>
-        <div class="field"><select id="sourceFilter"><option value="">Tudo</option><option value="manual">Novas compras</option><option value="imported">Importado da planilha</option></select></div>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Vencimento</th>
-              <th>Pessoa</th>
-              <th>Conta</th>
-              <th>Descrição</th>
-              <th>Parcela</th>
-              <th class="right">Valor</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="entriesBody"></tbody>
-        </table>
-      </div>
-      <div class="empty" id="emptyState" hidden>Nenhum lançamento encontrado para este mês.</div>
-    </section>
-
-    <section class="card section" data-section="backup">
-      <div class="section-head">
-        <div>
-          <div class="eyebrow">Segurança</div>
-          <h2>Backup e restauração</h2>
+        <div class="cards-grid dashboard-grid">
+          <article class="card panel">
+            <div class="panel-header">
+              <h3>Maiores categorias</h3>
+              <span id="topCategoryBadge" class="badge">Sem dados</span>
+            </div>
+            <div id="categorySpendingList" class="category-list empty-state-inline">
+              Nenhum gasto no período selecionado.
+            </div>
+          </article>
+          <article class="card panel">
+            <div class="panel-header">
+              <h3>Indicadores rápidos</h3>
+            </div>
+            <div class="metrics-list">
+              <div><span>Transações no mês</span><strong id="transactionsCount">0</strong></div>
+              <div><span>Média por lançamento</span><strong id="averageTicket">R$ 0,00</strong></div>
+              <div><span>Maior gasto</span><strong id="largestExpense">R$ 0,00</strong></div>
+              <div><span>Maior ganho</span><strong id="largestIncome">R$ 0,00</strong></div>
+            </div>
+          </article>
         </div>
-      </div>
-      <div class="backup-box">
-        <p style="margin-bottom:12px;">Seus dados ficam salvos no navegador. Faça backup para não perder os lançamentos.</p>
-        <div class="btn-row">
-          <button class="btn primary" id="downloadBackupBtn" type="button">Baixar backup JSON</button>
-          <label class="btn ghost" for="restoreInput" style="display:inline-flex;align-items:center;cursor:pointer;">Restaurar backup</label>
-          <input class="file-input" type="file" id="restoreInput" accept=".json,application/json" />
-          <button class="btn ghost" id="resetSeedBtn" type="button">Voltar à base da planilha</button>
-        </div>
-      </div>
-    </section>
-  </main>
-</div>
+      </section>
 
-<div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
-  <div class="modal">
-    <div class="eyebrow">Confirmação</div>
-    <h3 id="modalTitle" style="margin:6px 0 8px;">Excluir lançamento?</h3>
-    <p id="modalText" class="muted">Essa ação não pode ser desfeita.</p>
-    <div class="btn-row" style="margin-top:16px;">
-      <button class="btn ghost" id="modalCancel" type="button">Cancelar</button>
-      <button class="btn danger" id="modalConfirm" type="button">Excluir</button>
-    </div>
+      <section id="recordsSection" class="page-section" aria-labelledby="recordsTitle">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">CRUD completo</p>
+            <h2 id="recordsTitle">Lançamentos</h2>
+          </div>
+          <button id="openFormButton" class="primary-btn" type="button">Novo lançamento</button>
+        </div>
+
+        <div class="card form-card">
+          <form id="transactionForm" novalidate>
+            <input type="hidden" id="transactionId">
+            <div class="form-grid">
+              <label>
+                <span>Tipo</span>
+                <select id="type" required>
+                  <option value="">Selecione</option>
+                  <option value="ganho">Ganho</option>
+                  <option value="custo">Custo</option>
+                </select>
+              </label>
+              <label>
+                <span>Categoria</span>
+                <select id="nature" required>
+                  <option value="">Selecione</option>
+                  <option value="fixo">Fixo</option>
+                  <option value="variavel">Variável</option>
+                </select>
+              </label>
+              <label class="full-width">
+                <span>Descrição</span>
+                <input id="description" type="text" maxlength="80" placeholder="Ex.: Salário, Uber, Mercado" required>
+              </label>
+              <label>
+                <span>Valor</span>
+                <input id="amount" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="0,00" required>
+              </label>
+              <label>
+                <span>Data</span>
+                <input id="date" type="date" required>
+              </label>
+              <label class="full-width">
+                <span>Categoria personalizada</span>
+                <div class="input-with-action">
+                  <input id="customCategory" type="text" maxlength="40" placeholder="Ex.: Alimentação, Freelance, Transporte" list="categorySuggestions" required>
+                  <datalist id="categorySuggestions"></datalist>
+                </div>
+              </label>
+            </div>
+            <div class="form-actions">
+              <button class="primary-btn" id="saveButton" type="submit">Salvar lançamento</button>
+              <button class="secondary-btn" id="resetFormButton" type="button">Limpar</button>
+            </div>
+            <p class="helper-text">Os valores são salvos localmente no seu navegador via localStorage.</p>
+          </form>
+        </div>
+
+        <div class="card table-panel">
+          <div class="table-toolbar">
+            <div class="filters-grid">
+              <label>
+                <span>Filtrar tipo</span>
+                <select id="filterType">
+                  <option value="todos">Todos</option>
+                  <option value="ganho">Ganhos</option>
+                  <option value="custo">Custos</option>
+                </select>
+              </label>
+              <label>
+                <span>Filtrar categoria</span>
+                <select id="filterNature">
+                  <option value="todos">Todos</option>
+                  <option value="fixo">Fixo</option>
+                  <option value="variavel">Variável</option>
+                </select>
+              </label>
+              <label>
+                <span>Buscar</span>
+                <input id="searchInput" type="search" placeholder="Descrição ou categoria">
+              </label>
+            </div>
+            <div class="toolbar-actions">
+              <button id="exportCsvButton" class="secondary-btn" type="button">Exportar CSV</button>
+              <button id="exportJsonButton" class="secondary-btn" type="button">Exportar JSON</button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table aria-label="Tabela de lançamentos">
+              <thead>
+                <tr>
+                  <th><button class="sort-btn" data-sort="date" type="button">Data</button></th>
+                  <th><button class="sort-btn" data-sort="description" type="button">Descrição</button></th>
+                  <th><button class="sort-btn" data-sort="customCategory" type="button">Categoria</button></th>
+                  <th><button class="sort-btn" data-sort="type" type="button">Tipo</button></th>
+                  <th><button class="sort-btn" data-sort="amount" type="button">Valor</button></th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="transactionsTableBody"></tbody>
+            </table>
+          </div>
+          <div id="tableEmptyState" class="empty-state-inline">Nenhum lançamento encontrado para o filtro atual.</div>
+        </div>
+      </section>
+
+      <section id="analyticsSection" class="page-section" aria-labelledby="analyticsTitle">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Leitura analítica</p>
+            <h2 id="analyticsTitle">Dashboard analítico</h2>
+          </div>
+          <div class="card-inline analytic-filter">
+            <label>
+              <span>Top categorias</span>
+              <select id="topLimitSelect">
+                <option value="3">Top 3</option>
+                <option value="5" selected>Top 5</option>
+                <option value="8">Top 8</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="cards-grid analytics-grid">
+          <article class="card panel">
+            <div class="panel-header">
+              <h3>Distribuição de gastos por categoria</h3>
+            </div>
+            <div class="chart-layout">
+              <div class="donut-wrapper">
+                <svg id="donutChart" viewBox="0 0 120 120" role="img" aria-label="Gráfico de distribuição de gastos">
+                  <circle cx="60" cy="60" r="42" class="chart-track"></circle>
+                  <g id="donutSlices"></g>
+                  <circle cx="60" cy="60" r="28" class="chart-hole"></circle>
+                  <text x="60" y="57" class="chart-center-label">Custos</text>
+                  <text x="60" y="68" id="donutCenterValue" class="chart-center-value">R$ 0</text>
+                </svg>
+              </div>
+              <div id="donutLegend" class="legend-list empty-state-inline">Sem custos no período.</div>
+            </div>
+          </article>
+
+          <article class="card panel">
+            <div class="panel-header">
+              <h3>Comparativo dos últimos 6 meses</h3>
+            </div>
+            <div id="monthlyComparisonChart" class="bar-chart" aria-label="Gráfico comparativo mensal"></div>
+            <div id="variationIndicator" class="variation-card neutral">Sem base para comparar.</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="settingsSection" class="page-section" aria-labelledby="settingsTitle">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Segurança dos dados</p>
+            <h2 id="settingsTitle">Backup e restauração</h2>
+          </div>
+        </div>
+
+        <div class="cards-grid settings-grid">
+          <article class="card panel">
+            <h3>Exportar backup</h3>
+            <p>Baixe um arquivo JSON com lançamentos, preferências e configurações atuais.</p>
+            <button id="backupButton" class="primary-btn" type="button">Baixar backup</button>
+          </article>
+          <article class="card panel">
+            <h3>Importar backup</h3>
+            <p>Restaure um arquivo JSON compatível exportado pelo sistema.</p>
+            <label class="file-input">
+              <input id="restoreInput" type="file" accept="application/json">
+              <span>Selecionar arquivo JSON</span>
+            </label>
+          </article>
+          <article class="card panel">
+            <h3>Estrutura local</h3>
+            <pre class="schema-box" id="schemaPreview"></pre>
+          </article>
+        </div>
+      </section>
+    </main>
   </div>
-</div>
 
-<div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+  <div id="modalRoot" class="modal-root" aria-live="polite"></div>
+  <div id="toastRoot" class="toast-root" aria-live="assertive" aria-atomic="true"></div>
 
-<script src="script.js"></script>
+  <template id="confirmModalTemplate">
+    <div class="modal-backdrop" role="presentation">
+      <div class="modal card" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+        <div class="modal-header">
+          <h3 id="confirmModalTitle">Confirmar ação</h3>
+        </div>
+        <p id="confirmModalMessage"></p>
+        <div class="modal-actions">
+          <button class="secondary-btn" data-modal-cancel type="button">Cancelar</button>
+          <button class="danger-btn" data-modal-confirm type="button">Excluir</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="script.js"></script>
 </body>
 </html>
