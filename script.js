@@ -1,6 +1,6 @@
 const SUPABASE_URL = 'https://czjbuakujyslcpiearrn.supabaseClient.co';
 const SUPABASE_KEY = 'sb_publishable_ckSMP4wV5PRKQxX7iVYxUg_ikzL1ky6';
-const supabaseClient = window.supabaseClient.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 console.log('script carregou');
 console.log('window.supabase existe?', !!window.supabase);
 console.log('URL:', SUPABASE_URL);
@@ -104,7 +104,7 @@ async function bootstrap() {
 }
 
 async function loadTransactionsFromSupabase() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('transactions')
     .select('*')
     .order('date', { ascending: false })
@@ -117,7 +117,7 @@ async function loadTransactionsFromSupabase() {
 async function insertTransactionInSupabase(transaction) {
   const payload = mapTransactionToDb(transaction);
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('transactions')
     .insert([payload])
     .select()
@@ -130,7 +130,7 @@ async function insertTransactionInSupabase(transaction) {
 async function updateTransactionInSupabase(transaction) {
   const payload = mapTransactionToDb(transaction);
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('transactions')
     .update(payload)
     .eq('id', transaction.id)
@@ -142,7 +142,7 @@ async function updateTransactionInSupabase(transaction) {
 }
 
 async function deleteTransactionInSupabase(id) {
-  const { error } = await supabase
+  const { error } = await supabaseClient
     .from('transactions')
     .delete()
     .eq('id', id);
@@ -151,7 +151,7 @@ async function deleteTransactionInSupabase(id) {
 }
 
 async function loadPreferencesFromSupabase() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('user_preferences')
     .select('*')
     .order('created_at', { ascending: true })
@@ -197,7 +197,7 @@ async function persistPreferences() {
   };
 
   if (state.preferencesId) {
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from('user_preferences')
       .update(payload)
       .eq('id', state.preferencesId);
@@ -206,7 +206,7 @@ async function persistPreferences() {
     return;
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('user_preferences')
     .insert([payload])
     .select()
@@ -911,7 +911,7 @@ async function restoreBackup(event) {
       createdAt: item.createdAt || new Date().toISOString()
     }));
 
-    const { error: deleteError } = await supabase
+    const { error: deleteError } = await supabaseClient
       .from('transactions')
       .delete()
       .neq('id', '00000000-0000-0000-0000-000000000000');
@@ -921,7 +921,7 @@ async function restoreBackup(event) {
     if (mappedTransactions.length) {
       const rows = mappedTransactions.map(mapTransactionToDb);
 
-      const { error: insertError } = await supabase
+      const { error: insertError } = await supabaseClient
         .from('transactions')
         .insert(rows);
 
