@@ -1,4 +1,4 @@
-const SUPABASE_URL = 'https://czjbuakujyslcpiearrn.supabaseClient.co';
+const SUPABASE_URL = 'https://czjbuakujyslcpiearrn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ckSMP4wV5PRKQxX7iVYxUg_ikzL1ky6';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 console.log('script carregou');
