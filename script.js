@@ -1,17 +1,9 @@
 const SUPABASE_URL = 'https://czjbuakujyslcpiearrn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ckSMP4wV5PRKQxX7iVYxUg_ikzL1ky6';
-
-if (!window.supabase) {
-  document.body.innerHTML =
-    '<div style="padding:24px;font-family:Arial,sans-serif">' +
-      '<h1>Erro ao carregar Supabase</h1>' +
-      '<p>A biblioteca do Supabase não foi carregada neste navegador.</p>' +
-    '</div>';
-  throw new Error('Supabase library not loaded');
-}
-
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+console.log('script carregou');
+console.log('window.supabase existe?', !!window.supabase);
+console.log('URL:', SUPABASE_URL);
 const THEME_KEY = 'finance-control-theme';
 const DEFAULT_CATEGORIES = [
   'Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Assinaturas',
